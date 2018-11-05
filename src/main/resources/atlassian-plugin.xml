@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
+  <plugin-info>
+    <description>${project.description}</description>
+    <version>${project.version}</version>
+    <vendor name="${project.organization.name}" url="${project.organization.url}"/>
+    <param name="plugin-icon">images/pluginIcon.png</param>
+    <param name="plugin-logo">images/pluginLogo.png</param>
+  </plugin-info>
+  <!-- add our i18n resource -->
+  <resource type="i18n" name="i18n" location="unilever"/>
+  <!-- add our web resources -->
+  <web-resource key="unilever-resources" name="unilever Web Resources">
+    <dependency>com.atlassian.auiplugin:ajs</dependency>
+    <dependency>com.atlassian.auiplugin:aui-select2</dependency>
+    <resource type="download" name="unilever.css" location="/css/unilever.css"/>
+    <resource type="download" name="unilever.js" location="/js/unilever.js"/>
+    <resource type="download" name="images/" location="/images"/>
+    <context>com.addteq.plugin.unilever.configuration</context>
+  </web-resource>
+  <web-section key="system_anonymous_configuration_section" name="Automation Configuration section" location="top_system_section" weight="10">
+    <label key="anonymous.portal.access.config.section.label"/>
+    <condition class="com.atlassian.jira.plugin.webfragment.conditions.UserIsAdminCondition"/>
+  </web-section>
+  <web-item key="about_us_link" name="Link Anonymous Configuration" section="top_system_section/system_anonymous_configuration_section" weight="47">
+    <condition class="com.atlassian.jira.plugin.webfragment.conditions.UserLoggedInCondition"/>
+    <label key="anonymous.portal.access.config.label"/>
+    <link linkId="anonymous_configuration_link">/secure/MyWebworkModuleAction.jspa</link>
+  </web-item>
+  <ao key="ao-anonymous">
+    <description>Active objects</description>
+    <entity>com.addteq.plugin.ao.Route</entity>
+    <entity>com.addteq.plugin.ao.City</entity>
+  </ao>
+  <component-import key="ao" name="Active Objects service" interface="com.atlassian.activeobjects.external.ActiveObjects">
+    <description key="active.objects.service.description"/>
+  </component-import>
+  <component-import key="issue-service" name="Issue service" interface="com.atlassian.jira.bc.issue.IssueService">
+    <description key="issue.service.description"/>
+  </component-import>
+  <component key="tx-processor" name="Transactional Annotation Processor" class="com.atlassian.activeobjects.external.TransactionalAnnotationProcessor">
+    <decription key="transactional.annotation.processor">Transactional Annotation Processor</decription>
+  </component>
+  <webwork1 key="my-webwork-module" name="My Webwork Module" i18n-name-key="my-webwork-module.name">
+    <description key="my-webwork-module.description">The My Webwork Module Plugin</description>
+    <actions>
+      <action name="com.addteq.plugin.jira.webwork.MyWebworkModuleAction" alias="MyWebworkModuleAction">
+        <view name="success">/template/configuration.vm</view>
+        <view name="input">/template/configuration.vm</view>
+      </action>
+    </actions>
+  </webwork1>
+  <rest name="My Rest Resource" i18n-name-key="my-rest-resource.name" key="my-rest-resource" path="/unilever" version="1.0">
+    <description key="my-rest-resource.description">The My Rest Resource Plugin</description>
+  </rest>
+  <component key="database-service" name="Database Service" class="com.addteq.plugin.serviceImpl.DBManagerImpl">
+    <description key="anonymous.database.service.description">Anonymous Configuration Service</description>
+    <interface>com.addteq.plugin.service.DBManager</interface>
+  </component>
+  <component key="Automation-service" name="Automation Service" class="com.addteq.plugin.serviceImpl.AutomationHandlerImpl">
+    <description key="automation.service.description">Anonymous Configuration Service</description>
+    <interface>com.addteq.plugin.service.AutomationHandler</interface>
+  </component>
+  <workflow-function key="issue-automation" name="Issue Automation" i18n-name-key="issue-automation.name" class="com.addteq.plugin.jira.workflow.IssueAutomationFactory">
+    <description key="issue-automation.description">The Issue Automation Plugin</description>
+    <function-class>com.addteq.plugin.jira.workflow.IssueAutomation</function-class>
+    <resource type="velocity" name="view" location="templates/postfunctions/issue-automation.vm"/>
+<!--    <resource type="velocity" name="input-parameters" location="templates/postfunctions/issue-automation-input.vm"/>
+    <resource type="velocity" name="edit-parameters" location="templates/postfunctions/issue-automation-input.vm"/>-->
+  </workflow-function>
+</atlassian-plugin>

@@ -1,0 +1,93 @@
+<html>
+<head>
+    <title>Issue Automation Configuration Details</title>
+    <meta name="decorator" content="atl.admin">
+    $webResourceManager.requireResourcesForContext("com.addteq.plugin.unilever.configuration")
+</head>
+<body>
+    #if($authcontext.isLoggedInUser() == false)
+        $redirectToLoginPage
+    #else
+    <div>
+        <h2>Issue Automation Configuration</h2>
+    </div>
+    <div>
+        <button class="aui-button aui-button-primary" id="add-route">Add Route</button>
+    </div>
+    <div style="display: flex; align-items: flex-end; flex-direction: column;">
+        <button id="add-cities" class="aui-button aui-button-primary">Add Cities</button>
+    </div>
+    <form>
+        <div class="field-container">
+            <label>Select Route:</label>
+            <select class="select2 name="route" id="select-route" >
+                        <option value="-1" selected>None</option>
+                    #foreach( $route in $action.getRoutes())
+                        <option value="$route.getRoutID()">$route.getRoutName()</option>
+                    #end
+            </select>
+        </div>
+
+        <div class="field-container">
+            <label>Cities:</label>
+            <select  class="select full-width-field" multiple="" size="10"  id="select-city" >
+                        <option value="-1" selected>None</option>
+            </select>
+        </div>
+    </form>
+    <section id="city-dialog" class="aui-dialog2 aui-dialog2-small aui-layer" role="dialog" aria-hidden="true">
+            <header class="aui-dialog2-header">
+                <h2 class="aui-dialog2-header-main">City</h2>
+                <a class="aui-dialog2-header-close">
+                    <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+                </a>
+            </header>
+           <form class="aui" id="city-dialog-form">
+            <div class="aui-dialog2-content">
+              <div class="form-body">
+              <div class="field-group">
+                <label for="select2-request-types">Select Route:</label>
+                <select id="dialog-select-route" class="select2"> <option value="-1" selected>None</option></select>
+              </div>
+              <div class="field-group">
+                <label for="select2-request-types">City Name:</label>
+                <input class="text medium-field" id="dialog-city-name" type="text" value=""></input>
+              </div>
+              </div>
+             </div>
+           </form>
+            <footer class="aui-dialog2-footer">
+                <div class="aui-dialog2-footer-actions">
+                    <button id="add-city-button" class="aui-button aui-button-primary">Add</button>
+                    <button id="dialog-close-button" class="aui-button aui-button-link" resolved="">Close</button>
+                </div>
+            </footer>
+    </section>
+         
+    <section id="route-dialog" class="aui-dialog2 aui-dialog2-small aui-layer" role="dialog" aria-hidden="true">
+            <header class="aui-dialog2-header">
+                <h2 class="aui-dialog2-header-main">Route Details</h2>
+                <a class="aui-dialog2-header-close">
+                    <span class="aui-icon aui-icon-small aui-iconfont-close-dialog">Close</span>
+                </a>
+            </header>
+            <div class="aui-dialog2-content">
+            <form class="aui" id="enable-dialog-form">
+              <div class="form-body">
+                <div class="field-group">
+                    <label accesskey="u" for="dialog-username"><u>R</u>oute</label>
+                    <input class="text medium-field" id="dialog-route-name" type="text" value="">
+                </div>
+              </div>
+            </form>
+            </div>
+            <footer class="aui-dialog2-footer">
+                <div class="aui-dialog2-footer-actions">
+                    <button id="dialog-add-route" class="aui-button aui-button-primary">Add</button>
+                    <button id="dialog-close-btn" class="aui-button aui-button-link" resolved="">Close</button>
+                </div>
+            </footer>
+    </section>
+    #end
+</body>
+</html>
